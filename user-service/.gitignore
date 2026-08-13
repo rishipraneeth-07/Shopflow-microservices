@@ -1,14 +1,22 @@
 # Maven
 target/
 .mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.properties
 
 # Java
 *.class
 
+# Spring Boot
+HELP.md
+
 # IntelliJ IDEA
 .idea/
-*.iml
 *.iws
+*.iml
 *.ipr
 
 # Eclipse / STS
@@ -30,18 +38,17 @@ target/
 # Gradle
 .gradle/
 build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 # VS Code
 .vscode/
 
-# Spring Boot
-HELP.md
-
-# OS files
-desktop.ini
+# OS generated files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Environment files
+# Environment variables
 .env
 .env.*
