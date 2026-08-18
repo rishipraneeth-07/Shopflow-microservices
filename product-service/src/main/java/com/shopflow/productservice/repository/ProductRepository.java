@@ -1,4 +1,4 @@
-package com.shopflow.productservice.reposiitory;
+package com.shopflow.productservice.repository;
 
 import com.shopflow.productservice.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
