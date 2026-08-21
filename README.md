@@ -36,3 +36,13 @@ This project will cover:
 - Distributed transactions
 - Observability
 - Microservices testing
+
+## Services
+
+| Service | Responsibility |
+|---|---|
+| **User Service** | User registration, authentication, and user management |
+| **Product Service** | Product catalog and product information |
+| **Inventory Service** | Stock management and availability |
+| **Order Service** | Order creation, order processing, and order status |
+
