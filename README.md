@@ -46,3 +46,13 @@ This project will cover:
 | **Inventory Service** | Stock management and availability |
 | **Order Service** | Order creation, order processing, and order status |
 
+## API Endpoints
+
+### User Service
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/users` | Register a new user |
+| GET | `/api/users/{id}` | Get user by ID |
+| GET | `/api/users` | Get all users |
+
