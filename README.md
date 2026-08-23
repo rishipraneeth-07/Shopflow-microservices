@@ -56,3 +56,12 @@ This project will cover:
 | GET | `/api/users/{id}` | Get user by ID |
 | GET | `/api/users` | Get all users |
 
+### Product Service
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/products` | Create a new product |
+| GET | `/api/products/{id}` | Get product by ID |
+| GET | `/api/products` | Get all products |
+| PUT | `/api/products/{id}` | Update product |
+| DELETE | `/api/products/{id}` | Delete product |
