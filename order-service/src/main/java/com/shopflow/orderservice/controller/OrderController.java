@@ -1,5 +1,6 @@
 package com.shopflow.orderservice.controller;
 
+import com.shopflow.orderservice.dto.ProductResponse;
 import com.shopflow.orderservice.dto.UserResponse;
 import com.shopflow.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,11 @@ public class OrderController {
     @GetMapping("/test-user/{id}")
     UserResponse getUserById(@PathVariable Long id){
         return orderService.getUserById(id);
+    }
+
+    @GetMapping("/test-product/{id}")
+    ProductResponse getProductById(@PathVariable Long id){
+        return orderService.getProductById(id);
     }
 
 }
