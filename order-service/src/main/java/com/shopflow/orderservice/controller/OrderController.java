@@ -4,10 +4,7 @@ import com.shopflow.orderservice.dto.ProductResponse;
 import com.shopflow.orderservice.dto.UserResponse;
 import com.shopflow.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -23,6 +20,11 @@ public class OrderController {
     @GetMapping("/test-product/{id}")
     ProductResponse getProductById(@PathVariable Long id){
         return orderService.getProductById(id);
+    }
+
+    @GetMapping("/test-inventory/{productId}/available")
+    Boolean isInventoryAvailable(@PathVariable Long productId, @RequestParam Integer quantity){
+        return orderService.isProductAvailable(productId, quantity);
     }
 
 }
