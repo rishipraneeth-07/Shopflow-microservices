@@ -1,5 +1,6 @@
 package com.shopflow.orderservice.service;
 
+import com.shopflow.orderservice.client.InventoryClient;
 import com.shopflow.orderservice.client.ProductClient;
 import com.shopflow.orderservice.client.UserClient;
 import com.shopflow.orderservice.dto.ProductResponse;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class OrderServiceImpl  implements OrderService {
     private final UserClient userClient;
     private final ProductClient productClient;
+    private final InventoryClient inventoryClient;
 
     @Override
     public UserResponse getUserById(Long id) {
@@ -21,5 +23,10 @@ public class OrderServiceImpl  implements OrderService {
     @Override
     public ProductResponse getProductById(Long id) {
         return productClient.getProductById(id);
+    }
+
+    @Override
+    public Boolean isProductAvailable(Long productId, Integer quantity) {
+        return inventoryClient.isProductAvailable(productId, quantity);
     }
 }
