@@ -97,4 +97,24 @@ public class OrderServiceImpl  implements OrderService {
                 itemResponses
         );
     }
+
+    @Override
+    public OrderResponse getOrderById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Order not found"));
+        List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
+        List<OrderItemResponse> itemResponses = orderItems.stream()
+                .map(item -> new OrderItemResponse(
+                        item.getProductId(),
+                        item.getQuantity(),
+                        item.getPrice()
+                )).toList();
+        return new OrderResponse(
+                order.getId(),
+                order.getUserId(),
+                order.getStatus(),
+                order.getTotalAmount(),
+                itemResponses
+        );
+
+    }
 }

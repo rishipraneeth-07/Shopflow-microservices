@@ -11,4 +11,5 @@ public interface OrderService {
     Boolean isProductAvailable(Long productId,Integer quantity);
 
     OrderResponse createOrder(CreateOrderRequest request);
+    OrderResponse getOrderById(Long id);
 }
