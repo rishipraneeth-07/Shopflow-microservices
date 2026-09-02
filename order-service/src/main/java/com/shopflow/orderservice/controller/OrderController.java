@@ -1,8 +1,11 @@
 package com.shopflow.orderservice.controller;
 
+import com.shopflow.orderservice.dto.CreateOrderRequest;
+import com.shopflow.orderservice.dto.OrderResponse;
 import com.shopflow.orderservice.dto.ProductResponse;
 import com.shopflow.orderservice.dto.UserResponse;
 import com.shopflow.orderservice.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,11 @@ public class OrderController {
     @GetMapping("/test-inventory/{productId}/available")
     Boolean isInventoryAvailable(@PathVariable Long productId, @RequestParam Integer quantity){
         return orderService.isProductAvailable(productId, quantity);
+    }
+
+    @PostMapping
+    OrderResponse createOrder(@RequestBody @Valid CreateOrderRequest request){
+        return orderService.createOrder(request);
     }
 
 }
