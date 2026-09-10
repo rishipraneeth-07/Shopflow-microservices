@@ -19,6 +19,9 @@ public class LoggingFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         System.out.println("Incoming request"+""+exchange.getRequest().getMethod()+
                 ""+exchange.getRequest().getURI());
-        return chain.filter(exchange);
+        return chain.filter(exchange)
+                .then(Mono.fromRunnable(() -> {
+                    System.out.println("Response status"+exchange.getResponse().getStatusCode());
+                }));
     }
 }
