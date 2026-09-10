@@ -17,11 +17,21 @@ public class LoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        System.out.println("Incoming request"+""+exchange.getRequest().getMethod()+
-                ""+exchange.getRequest().getURI());
+
+        long startTime = System.currentTimeMillis();
+
+        System.out.println("Incoming request"+" "+exchange.getRequest().getMethod()+
+                " "+exchange.getRequest().getURI());
+
+
         return chain.filter(exchange)
                 .then(Mono.fromRunnable(() -> {
-                    System.out.println("Response status"+exchange.getResponse().getStatusCode());
+                    long endTime = System.currentTimeMillis();
+                    System.out.println("Response status"+exchange.getResponse().getStatusCode()
+                    );
+                    System.out.println("Execution time"+(endTime-startTime)+" ms");
+
+
                 }));
     }
 }
