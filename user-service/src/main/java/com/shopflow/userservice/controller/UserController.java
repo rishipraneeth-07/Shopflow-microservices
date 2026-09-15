@@ -1,6 +1,7 @@
 package com.shopflow.userservice.controller;
 
 import com.shopflow.userservice.dto.CreateUserRequest;
+import com.shopflow.userservice.dto.LoginRequest;
 import com.shopflow.userservice.dto.UserResponse;
 import com.shopflow.userservice.service.UserService;
 import jakarta.validation.Valid;
@@ -26,5 +27,10 @@ public class UserController {
             @PathVariable Long id) {
 
         return userService.getUserById(id);
+    }
+
+    @PostMapping("/login")
+    public UserResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+        return userService.login(loginRequest);
     }
 }
