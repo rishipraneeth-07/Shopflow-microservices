@@ -1,6 +1,7 @@
 package com.shopflow.userservice.service;
 
 import com.shopflow.userservice.dto.CreateUserRequest;
+import com.shopflow.userservice.dto.LoginRequest;
 import com.shopflow.userservice.dto.UserResponse;
 import com.shopflow.userservice.entity.User;
 import com.shopflow.userservice.repository.UserRepository;
@@ -33,6 +34,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 ()->new RuntimeException("User with id " + id + " not found")
         );
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
+    }
+
+    @Override
+    public UserResponse login(LoginRequest request) {
+        User user= userRepository.findByEmail(request.email()).orElseThrow(
+                ()->new RuntimeException("User with email " + request.email() + " not found")
+        );
+        if(!passwordEncoder.matches(request.password(), user.getPassword())){
+            throw new RuntimeException("Invalid password");
+        }
         return new UserResponse(
                 user.getId(),
                 user.getName(),
