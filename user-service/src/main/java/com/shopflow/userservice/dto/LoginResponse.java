@@ -1,4 +1,6 @@
 package com.shopflow.userservice.dto;
 
-public class LoginResponse {
+public record LoginResponse(
+        String token
+) {
 }
