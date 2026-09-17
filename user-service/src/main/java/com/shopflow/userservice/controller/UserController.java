@@ -2,6 +2,7 @@ package com.shopflow.userservice.controller;
 
 import com.shopflow.userservice.dto.CreateUserRequest;
 import com.shopflow.userservice.dto.LoginRequest;
+import com.shopflow.userservice.dto.LoginResponse;
 import com.shopflow.userservice.dto.UserResponse;
 import com.shopflow.userservice.service.UserService;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
     }
 }

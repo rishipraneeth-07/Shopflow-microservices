@@ -2,9 +2,11 @@ package com.shopflow.userservice.service;
 
 import com.shopflow.userservice.dto.CreateUserRequest;
 import com.shopflow.userservice.dto.LoginRequest;
+import com.shopflow.userservice.dto.LoginResponse;
 import com.shopflow.userservice.dto.UserResponse;
 import com.shopflow.userservice.entity.User;
 import com.shopflow.userservice.repository.UserRepository;
+import com.shopflow.userservice.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     @Override
     public UserResponse createUser(CreateUserRequest createUserRequest) {
         User user = new User();
@@ -42,17 +45,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user= userRepository.findByEmail(request.email()).orElseThrow(
                 ()->new RuntimeException("User with email " + request.email() + " not found")
         );
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new RuntimeException("Invalid password");
         }
-        return new UserResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
+        String token = jwtService.generateToken(user.getId());
+        return new LoginResponse(token);
     }
 }
