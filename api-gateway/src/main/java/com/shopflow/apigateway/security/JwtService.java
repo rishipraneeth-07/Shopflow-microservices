@@ -18,16 +18,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(Long userId){
-        return Jwts.builder()
-                .subject(userId.toString())
-                .issuedAt(new Date())
-                .expiration(new Date(
-                        System.currentTimeMillis()+1000*60*60
-                ))
-                .signWith(getSigningKey())
-                .compact();
-    }
 
     public boolean validateToken(String token){
         try{

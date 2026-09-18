@@ -18,6 +18,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+
+        String path = exchange.getRequest().getPath().value();
+
+        if (path.equals("/users/login") ||
+                path.equals("/users/register")) {
+
+            return chain.filter(exchange);
+        }
+
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ") ) {
