@@ -44,6 +44,19 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
+
+        String role = jwtService.extractRole(token);
+
+        if (path.startsWith("/users/") &&
+                !path.equals("/users/login") &&
+                !path.equals("/users/register") &&
+                !role.equals("ADMIN")) {
+
+            exchange.getResponse()
+                    .setStatusCode(HttpStatus.FORBIDDEN);
+
+            return exchange.getResponse().setComplete();
+        }
         return chain.filter(exchange);
     }
 
