@@ -5,9 +5,11 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private final JwtService jwtService;
@@ -49,6 +51,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         if (path.startsWith("/products") &&
                 exchange.getRequest().getMethod().name().equals("POST") &&
+                !role.equals("ADMIN")) {
+
+            exchange.getResponse()
+                    .setStatusCode(HttpStatus.FORBIDDEN);
+
+            return exchange.getResponse().setComplete();
+        }
+
+        if (path.startsWith("/products") &&
+                exchange.getRequest().getMethod().name().equals("PUT") &&
                 !role.equals("ADMIN")) {
 
             exchange.getResponse()
