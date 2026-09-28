@@ -69,6 +69,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             return exchange.getResponse().setComplete();
         }
 
+        if (path.startsWith("/products") &&
+                exchange.getRequest().getMethod().name().equals("DELETE") &&
+                !role.equals("ADMIN")) {
+
+            exchange.getResponse()
+                    .setStatusCode(HttpStatus.FORBIDDEN);
+
+            return exchange.getResponse().setComplete();
+        }
+
         if (path.startsWith("/users/") &&
                 !path.equals("/users/login") &&
                 !path.equals("/users/register") &&
