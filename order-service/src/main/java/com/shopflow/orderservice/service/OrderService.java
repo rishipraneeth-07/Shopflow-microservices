@@ -12,7 +12,7 @@ public interface OrderService {
     ProductResponse getProductById(Long id);
     Boolean isProductAvailable(Long productId,Integer quantity);
 
-    OrderResponse createOrder(CreateOrderRequest request);
+    OrderResponse createOrder(Long userId, CreateOrderRequest request);
     OrderResponse getOrderById(Long id);
     List<OrderResponse> getOrdersByUserId(Long userId);
 }

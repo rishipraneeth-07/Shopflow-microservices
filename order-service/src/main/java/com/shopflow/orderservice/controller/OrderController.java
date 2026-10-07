@@ -33,8 +33,10 @@ public class OrderController {
     }
 
     @PostMapping
-    OrderResponse createOrder(@RequestBody @Valid CreateOrderRequest request){
-        return orderService.createOrder(request);
+    OrderResponse createOrder(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody @Valid CreateOrderRequest request){
+        return orderService.createOrder(userId,request);
     }
 
     @GetMapping("/{id}")

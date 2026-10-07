@@ -18,7 +18,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImpl  implements OrderService {
+public class OrderServiceImpl implements OrderService {
+
     private final UserClient userClient;
     private final ProductClient productClient;
     private final InventoryClient inventoryClient;
@@ -41,22 +42,37 @@ public class OrderServiceImpl  implements OrderService {
     }
 
     @Override
-    public OrderResponse createOrder(CreateOrderRequest request) {
-        UserResponse user= userClient.getUserById(request.userId());
+    public OrderResponse createOrder(Long userId, CreateOrderRequest request) {
+
+        UserResponse user = userClient.getUserById(userId);
 
         List<OrderItemResponse> itemResponses = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        for(OrderItemRequest item : request.items()){
-            ProductResponse product = productClient.getProductById(item.productId());
-            Boolean available = inventoryClient.isProductAvailable(item.productId(), item.quantity());
+        for (OrderItemRequest item : request.items()) {
 
-            if (!available){
-                throw new RuntimeException("Product " + item.productId() + " is not available");
+            ProductResponse product =
+                    productClient.getProductById(item.productId());
+
+            Boolean available =
+                    inventoryClient.isProductAvailable(
+                            item.productId(),
+                            item.quantity()
+                    );
+
+            if (!available) {
+                throw new RuntimeException(
+                        "Product " + item.productId() + " is not available"
+                );
             }
 
-            BigDecimal itemTotal =product.price().multiply(BigDecimal.valueOf(item.quantity()));
+            BigDecimal itemTotal =
+                    product.price().multiply(
+                            BigDecimal.valueOf(item.quantity())
+                    );
+
             totalAmount = totalAmount.add(itemTotal);
+
             itemResponses.add(
                     new OrderItemResponse(
                             item.productId(),
@@ -68,7 +84,7 @@ public class OrderServiceImpl  implements OrderService {
 
         Order order = new Order();
 
-        order.setUserId(request.userId());
+        order.setUserId(userId);
         order.setStatus(OrderStatus.CREATED);
         order.setTotalAmount(totalAmount);
 
@@ -100,14 +116,26 @@ public class OrderServiceImpl  implements OrderService {
 
     @Override
     public OrderResponse getOrderById(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Order not found"));
-        List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getId());
-        List<OrderItemResponse> itemResponses = orderItems.stream()
-                .map(item -> new OrderItemResponse(
-                        item.getProductId(),
-                        item.getQuantity(),
-                        item.getPrice()
-                )).toList();
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found")
+                );
+
+        List<OrderItem> orderItems =
+                orderItemRepository.findByOrderId(order.getId());
+
+        List<OrderItemResponse> itemResponses =
+                orderItems.stream()
+                        .map(item ->
+                                new OrderItemResponse(
+                                        item.getProductId(),
+                                        item.getQuantity(),
+                                        item.getPrice()
+                                )
+                        )
+                        .toList();
+
         return new OrderResponse(
                 order.getId(),
                 order.getUserId(),
@@ -115,12 +143,14 @@ public class OrderServiceImpl  implements OrderService {
                 order.getTotalAmount(),
                 itemResponses
         );
-
     }
 
     @Override
     public List<OrderResponse> getOrdersByUserId(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
+
+        List<Order> orders =
+                orderRepository.findByUserId(userId);
+
         return orders.stream()
                 .map(order -> {
 
@@ -129,11 +159,13 @@ public class OrderServiceImpl  implements OrderService {
 
                     List<OrderItemResponse> itemResponses =
                             orderItems.stream()
-                                    .map(item -> new OrderItemResponse(
-                                            item.getProductId(),
-                                            item.getQuantity(),
-                                            item.getPrice()
-                                    ))
+                                    .map(item ->
+                                            new OrderItemResponse(
+                                                    item.getProductId(),
+                                                    item.getQuantity(),
+                                                    item.getPrice()
+                                            )
+                                    )
                                     .toList();
 
                     return new OrderResponse(
