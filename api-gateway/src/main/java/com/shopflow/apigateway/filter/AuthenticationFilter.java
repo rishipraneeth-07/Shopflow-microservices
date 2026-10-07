@@ -49,6 +49,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         String role = jwtService.extractRole(token);
 
+        Long userId = jwtService.extractUserId(token);
+
+        exchange = exchange.mutate()
+                .request(request -> request
+                        .header("X-User-Id", String.valueOf(userId))
+                        .header("X-User-Role", role))
+                .build();
+
         if (path.startsWith("/products") &&
                 exchange.getRequest().getMethod().name().equals("POST") &&
                 !role.equals("ADMIN")) {

@@ -32,6 +32,15 @@ public class JwtService {
         }
     }
 
+    public Long extractUserId(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId", Long.class);
+    }
+
     public String extractRole(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
