@@ -7,6 +7,8 @@ import com.shopflow.orderservice.dto.*;
 import com.shopflow.orderservice.entity.Order;
 import com.shopflow.orderservice.entity.OrderItem;
 import com.shopflow.orderservice.entity.OrderStatus;
+import com.shopflow.orderservice.event.OrderCreatedEvent;
+import com.shopflow.orderservice.kafka.OrderEventProducer;
 import com.shopflow.orderservice.repository.OrderItemRepository;
 import com.shopflow.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final InventoryClient inventoryClient;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final OrderEventProducer orderEventProducer;
 
     @Override
     public UserResponse getUserById(Long id) {
@@ -104,6 +107,13 @@ public class OrderServiceImpl implements OrderService {
 
             orderItemRepository.save(orderItem);
         }
+
+        OrderCreatedEvent event = new OrderCreatedEvent(
+                savedOrder.getId(),
+                userId
+        );
+
+        orderEventProducer.publishOrderCreated(event);
 
         return new OrderResponse(
                 savedOrder.getId(),
