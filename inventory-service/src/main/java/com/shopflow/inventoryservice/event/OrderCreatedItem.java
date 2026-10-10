@@ -1,4 +1,7 @@
 package com.shopflow.inventoryservice.event;
 
-public class OrderCreatedItem {
+public record OrderCreatedItem(
+        Long productId,
+        Integer quantity
+) {
 }
