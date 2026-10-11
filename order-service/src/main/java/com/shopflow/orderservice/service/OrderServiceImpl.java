@@ -8,6 +8,7 @@ import com.shopflow.orderservice.entity.Order;
 import com.shopflow.orderservice.entity.OrderItem;
 import com.shopflow.orderservice.entity.OrderStatus;
 import com.shopflow.orderservice.event.OrderCreatedEvent;
+import com.shopflow.orderservice.event.OrderCreatedItem;
 import com.shopflow.orderservice.kafka.OrderEventProducer;
 import com.shopflow.orderservice.repository.OrderItemRepository;
 import com.shopflow.orderservice.repository.OrderRepository;
@@ -110,7 +111,13 @@ public class OrderServiceImpl implements OrderService {
 
         OrderCreatedEvent event = new OrderCreatedEvent(
                 savedOrder.getId(),
-                userId
+                userId,
+                request.items().stream()
+                        .map(item -> new OrderCreatedItem(
+                                item.productId(),
+                                item.quantity()
+                        ))
+                        .toList()
         );
 
         orderEventProducer.publishOrderCreated(event);
