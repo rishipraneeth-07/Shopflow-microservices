@@ -7,4 +7,5 @@ public interface InventoryService {
     InventoryResponse createInventory(CreateInventoryRequest request);
     InventoryResponse getInventoryByProductId(Long productId);
     boolean isProductAvailable(Long productId, Integer quantity);
+    void reserveInventory(Long productId, Integer quantity);
 }

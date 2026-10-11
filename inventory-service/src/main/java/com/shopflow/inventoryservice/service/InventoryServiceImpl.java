@@ -58,4 +58,20 @@ public class InventoryServiceImpl implements InventoryService {
                 inventory.getQuantity()
         );
     }
+
+    @Override
+    public void reserveInventory(Long productId, Integer quantity) {
+        Inventory inventory = inventoryRepository
+                .findByProductId(productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Inventory not found for product " + productId));
+
+        if (inventory.getQuantity() < quantity) {
+            throw new RuntimeException(
+                    "Insufficient inventory for product " + productId);
+        }
+
+        inventory.setQuantity(inventory.getQuantity() - quantity);
+        inventoryRepository.save(inventory);
+    }
 }
