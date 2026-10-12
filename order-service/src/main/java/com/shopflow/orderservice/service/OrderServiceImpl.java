@@ -12,6 +12,7 @@ import com.shopflow.orderservice.event.OrderCreatedItem;
 import com.shopflow.orderservice.kafka.OrderEventProducer;
 import com.shopflow.orderservice.repository.OrderItemRepository;
 import com.shopflow.orderservice.repository.OrderRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CircuitBreaker(
+            name = "productService",
+            fallbackMethod = "getProductByIdFallback"
+    )
     public ProductResponse getProductById(Long id) {
         return productClient.getProductById(id);
+    }
+
+    private ProductResponse getProductByIdFallback(Long id, Throwable ex) {
+        throw new IllegalStateException(
+                "Product Service is currently unavailable. Please try again later.",
+                ex
+        );
     }
 
     @Override
@@ -56,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
         for (OrderItemRequest item : request.items()) {
 
             ProductResponse product =
-                    productClient.getProductById(item.productId());
+                    getProductById(item.productId());
 
             Boolean available =
                     inventoryClient.isProductAvailable(
@@ -97,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
         for (OrderItemRequest item : request.items()) {
 
             ProductResponse product =
-                    productClient.getProductById(item.productId());
+                    getProductById(item.productId());
 
             OrderItem orderItem = new OrderItem();
 
