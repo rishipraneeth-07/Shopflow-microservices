@@ -53,8 +53,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CircuitBreaker(
+            name = "inventoryService",
+            fallbackMethod = "isProductAvailableFallback"
+    )
     public Boolean isProductAvailable(Long productId, Integer quantity) {
         return inventoryClient.isProductAvailable(productId, quantity);
+    }
+
+    private Boolean isProductAvailableFallback(
+            Long productId,
+            Integer quantity,
+            Throwable ex
+    ) {
+        throw new IllegalStateException(
+                "Inventory Service is currently unavailable. Please try again later.",
+                ex
+        );
     }
 
     @Override
@@ -70,11 +85,10 @@ public class OrderServiceImpl implements OrderService {
             ProductResponse product =
                     getProductById(item.productId());
 
-            Boolean available =
-                    inventoryClient.isProductAvailable(
-                            item.productId(),
-                            item.quantity()
-                    );
+            Boolean available = isProductAvailable(
+                    item.productId(),
+                    item.quantity()
+            );
 
             if (!available) {
                 throw new RuntimeException(
