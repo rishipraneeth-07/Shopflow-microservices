@@ -13,6 +13,7 @@ import com.shopflow.orderservice.kafka.OrderEventProducer;
 import com.shopflow.orderservice.repository.OrderItemRepository;
 import com.shopflow.orderservice.repository.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
             name = "productService",
             fallbackMethod = "getProductByIdFallback"
     )
+    @Retry(name = "productService")
     public ProductResponse getProductById(Long id) {
         return productClient.getProductById(id);
     }
