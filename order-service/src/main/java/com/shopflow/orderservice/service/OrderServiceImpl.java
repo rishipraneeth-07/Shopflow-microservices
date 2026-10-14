@@ -70,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
             name = "inventoryService",
             fallbackMethod = "isProductAvailableFallback"
     )
+    @Retry(name = "inventoryService")
     public Boolean isProductAvailable(Long productId, Integer quantity) {
         return inventoryClient.isProductAvailable(productId, quantity);
     }
