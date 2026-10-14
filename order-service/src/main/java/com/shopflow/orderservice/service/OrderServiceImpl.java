@@ -37,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
             name = "userService",
             fallbackMethod = "getUserByIdFallback"
     )
+    @Retry(name = "userService")
     public UserResponse getUserById(Long id) {
         return userClient.getUserById(id);
     }
