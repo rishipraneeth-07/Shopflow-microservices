@@ -32,8 +32,19 @@ public class OrderServiceImpl implements OrderService {
     private final OrderEventProducer orderEventProducer;
 
     @Override
+    @CircuitBreaker(
+            name = "userService",
+            fallbackMethod = "getUserByIdFallback"
+    )
     public UserResponse getUserById(Long id) {
         return userClient.getUserById(id);
+    }
+
+    private UserResponse getUserByIdFallback(Long id, Throwable ex) {
+        throw new IllegalStateException(
+                "User Service is currently unavailable. Please try again later.",
+                ex
+        );
     }
 
     @Override
@@ -75,8 +86,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse createOrder(Long userId, CreateOrderRequest request) {
 
-        UserResponse user = userClient.getUserById(userId);
-
+        UserResponse user = getUserById(userId);
         List<OrderItemResponse> itemResponses = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
